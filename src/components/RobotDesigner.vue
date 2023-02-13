@@ -1,23 +1,23 @@
 <template>
     <div class="row">
       <div class="col-3">
-        <h3>Draggable 1</h3>
+        <h3>Elements</h3>
         <draggable
           class="dragArea list-group"
-          :list="list1"
+          :list="elements"
           :group="{ name: 'g1', pull: 'clone', put: false }"
           :clone="cloneTask"
         >
-          <div class="list-group-item" v-for="element in list1" :key="element.type">
+          <div class="list-group-item" v-for="element in elements" :key="element.type">
             {{ element.name }}
           </div>
         </draggable>
       </div>
   
       <div class="col-3">
-        <h3>Draggable 2</h3>
+        <h3>Task: <input type="text" class="form-control" v-model="robot.name"/></h3>
   
-          <nested-task :tasks="list2.child" />
+          <nested-task :tasks="robot.child" />
   
         <!-- <draggable
           class="dragArea list-group"
@@ -32,7 +32,12 @@
   
   
       </div>
+      <div class="col-3">
+        <h3>Keywords</h3>
   
+          <nested-task :tasks="robot.keywords" />
+    
+      </div>
       <!-- <rawDisplayer class="col-3" :value="list1" title="List 1" />
   
       <rawDisplayer class="col-3" :value="list2" title="List 2" /> -->
@@ -42,7 +47,7 @@
   <script lang="ts">
   import Draggable from "vuedraggable";
   import NestedTask from "./infra/NestedTask.vue";
-  import {Robot, SeqTask, Task, IfTask, ForTask} from "@/types/Task";
+  import {Robot, SeqTask, Task, IfTask, ForTask, Keyword} from "@/types/Task";
   
   import { Watch, Component, Vue } from "vue-property-decorator";
   
@@ -52,16 +57,17 @@
     }
   }
 )
-export default class TutorialsList extends Vue {
+export default class RobotDesigner extends Vue {
     private idGlobal: number = 50;
 
-    list1: any[] = [
+    elements: any[] = [
           {name: "For", type: ForTask},
           {name: "If", type: IfTask},
           {name: "Task", type: Task},
+          {name: "Keyword", type: Keyword},
         ];
 
-    list2: Task = new Robot(4, "seq", [
+    robot: Task = new Robot(4, "Task1", [
           new ForTask(5, "for", 
             [ new Task(6, "task") ]
           )
@@ -70,7 +76,7 @@ export default class TutorialsList extends Vue {
     
     @Watch("list2", {immediate: true, deep: true})
     log() {
-        window.console.log(this.list2.toRobot(1));
+        window.console.log(this.robot.toRobot(0));
     }
 
     cloneTask(item: any) {

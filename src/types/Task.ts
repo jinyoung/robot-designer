@@ -69,6 +69,7 @@ class IfTask extends SeqTask{
 class Robot extends SeqTask{
 
     private variables: Variable[] = [];
+    public keywords: Keyword[] = [];
 
 
     public toRobot(tab: number): string{
@@ -80,7 +81,11 @@ class Robot extends SeqTask{
 
         robot+="*** Tasks ****\n";
 
-        robot+=super.toRobot(tab);
+        robot+=super.toRobot(tab) + "\n";
+
+        robot+="*** Keywords ****\n";
+
+        this.keywords.forEach(keyword => robot += keyword.toRobot(tab));
 
         return robot;
     }
@@ -96,4 +101,8 @@ class Variable extends Construct{
 
 }
 
-export{Robot, Task, SeqTask, ForTask, IfTask}
+class Keyword extends SeqTask{
+
+}
+
+export{Robot, Task, SeqTask, ForTask, IfTask, Keyword}
