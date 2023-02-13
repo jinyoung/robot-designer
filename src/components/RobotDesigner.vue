@@ -42,7 +42,7 @@
   <script lang="ts">
   import Draggable from "vuedraggable";
   import NestedTask from "./infra/NestedTask.vue";
-  import {SeqTask, Task, IfTask, ForTask} from "@/types/Task";
+  import {Robot, SeqTask, Task, IfTask, ForTask} from "@/types/Task";
   
   import { Watch, Component, Vue } from "vue-property-decorator";
   
@@ -61,7 +61,7 @@ export default class TutorialsList extends Vue {
           {name: "Task", type: Task},
         ];
 
-    list2: Task = new SeqTask(4, "seq", [
+    list2: Task = new Robot(4, "seq", [
           new ForTask(5, "for", 
             [ new Task(6, "task") ]
           )
@@ -70,7 +70,7 @@ export default class TutorialsList extends Vue {
     
     @Watch("list2", {immediate: true, deep: true})
     log() {
-        window.console.log(this.list2.toRobot(0));
+        window.console.log(this.list2.toRobot(1));
     }
 
     cloneTask(item: any) {

@@ -1,13 +1,22 @@
-class Task{
+class Construct{
+    protected static tabs = "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t";
 
-    constructor(public id: number, public name: string, public child: Array<Task> = []){
-        this.id = id;
+    constructor(protected name: string){
         this.name = name;
-        this.child = child;
     }
 
     public toRobot(tab: number): string{
-        return `name: ${this.name}`
+        return Construct.tabs.substr(0, tab)  + `${this.name}`
+    }
+    
+}
+
+class Task extends Construct{
+
+    constructor(private id: number, name: string, public child: Array<Task> = []){
+        super(name);
+        this.id = id;
+        this.child = child;
     }
 
     public clone():any {
@@ -29,38 +38,62 @@ class Task{
 
 class SeqTask extends Task{
 
-    constructor(public id: number, public name: string, public child: Array<Task> = []){
-        super(id, name, child);
-    }
 
     public toRobot(tab: number): string{
 
-        let childRobot = "";
-        if(this.child){
-            childRobot = this.child.reduce((childRobot, child)=> childRobot + "\n" + "                   ".substr(0, tab) + child.toRobot(tab + 1), "");
-        }
+        let robot = super.toRobot(tab);
 
-        return `name: ${this.name}{\n${childRobot}\n}` 
+        
+        this.child?.forEach(child=> robot += "\n"+child.toRobot(tab + 1));
+        
+
+        return robot; 
     }
 }
 
 class ForTask extends SeqTask{
 
 
-    public toRobot(tab: number): string{
+    // public toRobot(tab: number): string{
 
-        return super.toRobot(tab);
-    }
+    //     return super.toRobot(tab);
+    // }
 
 }
 
 class IfTask extends SeqTask{
 
-    public toRobot(tab: number): string{
 
-        return super.toRobot(tab);
+}
+
+class Robot extends SeqTask{
+
+    private variables: Variable[] = [];
+
+
+    public toRobot(tab: number): string{
+        let robot = "*** Variables ***\n";
+        
+        this.variables.forEach(
+            variable => robot += variable.toRobot(tab+1)
+        );
+
+        robot+="*** Tasks ****\n";
+
+        robot+=super.toRobot(tab);
+
+        return robot;
     }
 
 }
 
-export{Task, SeqTask, ForTask, IfTask}
+class Variable extends Construct{
+
+    public constructor(public name: string, public defaultValue: string){
+        super(name);
+        this.defaultValue = defaultValue;
+    }
+
+}
+
+export{Robot, Task, SeqTask, ForTask, IfTask}
