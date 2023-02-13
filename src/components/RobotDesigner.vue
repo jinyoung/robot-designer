@@ -74,7 +74,7 @@ export default class RobotDesigner extends Vue {
         ])
     ;
     
-    @Watch("list2", {immediate: true, deep: true})
+    @Watch("robot", {immediate: true, deep: true})
     log() {
         window.console.log(this.robot.toRobot(0));
     }
