@@ -47,7 +47,7 @@
   <script lang="ts">
   import Draggable from "vuedraggable";
   import NestedTask from "./infra/NestedTask.vue";
-  import {Robot, SeqTask, Task, IfTask, ForTask, Keyword} from "@/types/Task";
+  import {Robot, SeqTask, Task, IfTask, ForTask, Keyword, CallKeyword} from "@/types/Task";
   
   import { Watch, Component, Vue } from "vue-property-decorator";
   
@@ -64,6 +64,7 @@ export default class RobotDesigner extends Vue {
           {name: "For", type: ForTask},
           {name: "If", type: IfTask},
           {name: "Task", type: Task},
+          {name: "CallKeyword", type: CallKeyword},
           {name: "Keyword", type: Keyword},
         ];
 

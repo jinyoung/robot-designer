@@ -36,6 +36,31 @@ class Task extends Construct{
     }   
 }
 
+class CallKeyword extends Construct{
+    public inputVariableNames: string[] = ["a","b", "c"];
+    public outputVariableName: string = "invitations";
+
+   
+    public toRobot(tab: number): string{
+        let robot = Construct.tabs.substr(0, tab) ;
+        
+        if(this.outputVariableName)
+            robot += "${" + this.outputVariableName + "} = ";
+        
+        robot 
+            += `${this.name} `;
+
+        if(this.inputVariableNames){
+            this.inputVariableNames.forEach(inputVarName => {
+                robot += "${" + inputVarName + "} ";
+            })
+        }
+
+        return robot;
+    }
+     
+}
+
 class SeqTask extends Task{
 
 
@@ -45,6 +70,8 @@ class SeqTask extends Task{
 
         
         this.child?.forEach(child=> robot += "\n"+child.toRobot(tab + 1));
+
+        robot += "\n"+Construct.tabs.substr(0, tab)+"END";
         
 
         return robot; 
@@ -53,11 +80,22 @@ class SeqTask extends Task{
 
 class ForTask extends SeqTask{
 
+    public itemVarName: string = "item";
+    public iterationVarName: string = "items";
 
-    // public toRobot(tab: number): string{
+   
+    public toRobot(tab: number): string{
 
-    //     return super.toRobot(tab);
-    // }
+        let robot = Construct.tabs.substr(0, tab)  + `${this.name} \$\{${this.itemVarName}\} IN \$\{${this.iterationVarName}\}`
+
+        
+        this.child?.forEach(child=> robot += "\n"+child.toRobot(tab + 1));
+
+        robot += "\n"+Construct.tabs.substr(0, tab)+"END";
+        
+
+        return robot; 
+    }
 
 }
 
@@ -105,4 +143,4 @@ class Keyword extends SeqTask{
 
 }
 
-export{Robot, Task, SeqTask, ForTask, IfTask, Keyword}
+export{Robot, Task, SeqTask, ForTask, IfTask, Keyword, CallKeyword}
